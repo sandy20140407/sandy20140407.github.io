@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>MariaDB Maxscale配置 | Try Everything</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1.安装1.1 服务器环境Linux shd-db-slb-01 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt11-1+deb8u3 (2015-08-04) x86_64 GNU/Linux1.2 MaxScale 版本maxscale-2.1.6-1.debian.stretch.x86_64.deb1.3 安装1234567a.dpkg -i maxscal">
+<meta name="keywords" content="Mariadb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MariaDB Maxscale配置">
+<meta property="og:url" content="http://sandysandy.github.io/2019/10/07/Maxscale安装部署/index.html">
+<meta property="og:site_name" content="Try Everything">
+<meta property="og:description" content="1.安装1.1 服务器环境Linux shd-db-slb-01 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt11-1+deb8u3 (2015-08-04) x86_64 GNU/Linux1.2 MaxScale 版本maxscale-2.1.6-1.debian.stretch.x86_64.deb1.3 安装1234567a.dpkg -i maxscal">
+<meta property="og:locale" content="en,zh-cn">
+<meta property="og:updated_time" content="2019-10-07T08:03:00.344Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MariaDB Maxscale配置">
+<meta name="twitter:description" content="1.安装1.1 服务器环境Linux shd-db-slb-01 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt11-1+deb8u3 (2015-08-04) x86_64 GNU/Linux1.2 MaxScale 版本maxscale-2.1.6-1.debian.stretch.x86_64.deb1.3 安装1234567a.dpkg -i maxscal">
+  
+    <link rel="alternate" href="/atom.xml" title="Try Everything" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Try Everything</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">just move it</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://sandysandy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Maxscale安装部署" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/07/Maxscale安装部署/" class="article-date">
+  <time datetime="2019-10-07T15:40:56.000Z" itemprop="datePublished">2019-10-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MariaDB Maxscale配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1.安装"></a>1.安装</h2><h3 id="1-1-服务器环境"><a href="#1-1-服务器环境" class="headerlink" title="1.1 服务器环境"></a>1.1 服务器环境</h3><pre><code>Linux shd-db-slb-01 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt11-1+deb8u3 (2015-08-04) x86_64 GNU/Linux</code></pre><h3 id="1-2-MaxScale-版本"><a href="#1-2-MaxScale-版本" class="headerlink" title="1.2 MaxScale 版本"></a>1.2 MaxScale 版本</h3><pre><code>maxscale-2.1.6-1.debian.stretch.x86_64.deb</code></pre><h3 id="1-3-安装"><a href="#1-3-安装" class="headerlink" title="1.3 安装"></a>1.3 安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a.dpkg -i maxscale-2.1.6-1.debian.stretch.x86_64.deb</span><br><span class="line">报错：</span><br><span class="line">dpkg: dependency problems prevent configuration of maxscale:</span><br><span class="line">maxscale depends on libstdc++6 (&gt;= 5.2); however:</span><br><span class="line">Version of libstdc++6:amd64 on system is 4.9.2-10.</span><br><span class="line">解决：</span><br><span class="line">安装 libssl1.1_1.1.0f-3_amd64.deb，libstdc++6_6.3.0-18_amd64.deb，gcc-6-base_6.3.0-18_amd64.deb</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-配置"><a href="#2-配置" class="headerlink" title="2.配置"></a>2.配置</h2><h3 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h3><ul>
+<li><p>service</p>
+<pre><code>service代表 MariaDB MaxScale 用户端 设置数据库的指定访问路径，这个访问路径定义了对独立数据库的直接特定的的请求算法</code></pre></li>
+<li><p>server</p>
+<pre><code>server 代表一个独立的数据库服务器，客户端可以通过 MariaDB MaxScale 连接它</code></pre></li>
+<li><p>router</p>
+<pre><code>router 是 MariaDB MaxScale 的一个模块，用来为 MariaDB MaxScale 提供服务接口的多台数据库服务器路由客户端请求</code></pre></li>
+<li><p>connection routing</p>
+<pre><code>Connection routing 是一种基于连接控制请求的方式，在这种方式下，MariaDB MaxScale 处理来自客户端的多个连接，每个连接指定一个数据库传递数据，
+基于路由的连接，不会检查一个连接的独立的请求，并且连接一旦创建，不会移除它</code></pre></li>
+<li><p>statement routing</p>
+<pre><code>Statement routing 是一种基于独立请求的控制方式。请求可能被分发到一个或者多个服务器上，会话中的连接可能被动态的添加或者删除</code></pre></li>
+<li><p>protocol</p>
+<pre><code>protocol 是一个软件模块，用来与系统中的其他软件实体通讯。MariaDB MaxScale 支持动态加载 protocol 模块 来支持弹性增长</code></pre></li>
+<li><p>module</p>
+<pre><code>module 是一个独立的代码块，可以动态的加载到 MariaDB MaxScale 来扩展功能，它是可以动态加载和共享的工具集。</code></pre></li>
+<li><p>monitor</p>
+<pre><code>monitor 是 MariaDB MaxScale 用来监控数据库设置状态的模块。内部的监控是可选的配置，也可以用于外部监控</code></pre></li>
+<li><p>listener</p>
+<pre><code>listener 是 一个用来监听来自应用客户端连接MariaDB MaxScale 的网络端口。一个listener 监听一个服务，但是一个服务可以被多个端口监听</code></pre></li>
+<li><p>connection failover</p>
+<pre><code>当一个 MariaDB MaxScale 和 数据库服务器之间的连接失败，MariaDB MaxScale 会在客户端不中断的情况下，创建一个替代的连接</code></pre></li>
+<li><p>backend database</p>
+<pre><code>应用通过 MariaDB MaxScale 访问的后端数据库</code></pre></li>
+<li><p>filter</p>
+<pre><code>MariaDB MaxScale router 模块 和 客户端之间的模块。所有的客户端数据通过 filter 模块并且可能被 filter 检查或者修改。Filters 可能被连接在一起形成进程管道</code></pre></li>
+</ul>
+<h3 id="2-1-配置文件"><a href="#2-1-配置文件" class="headerlink" title="2.1 配置文件"></a>2.1 配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">配置文件默认在 /etc/maxscale.cnf</span><br><span class="line">也可以通过命令行参数指定 –configdir=</span><br><span class="line">建议使用全局的配置文件，特殊需求也可以使用独立的配置文件</span><br><span class="line">配置文件中的size配置，支持准确的1024倍数的单位（Ki, Mi, Gi, Ti）和1000倍数的单位（K, M, G, T）两种表述方式</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-配置项"><a href="#2-2-配置项" class="headerlink" title="2.2 配置项"></a>2.2 配置项</h3><ul>
+<li><p>全局配置 [MaxScale]</p>
+<ul>
+<li><p>thread</p>
+<pre><code>控制使用内核的工作线程，默认值为1，推荐使用默认值，在需要更好性能的时候增加配置，但不要超过内核总数。可以设置为 auto，MaxScale会自动调整这个值。这个配置用来设置管理用户连接的线程数</code></pre></li>
+<li><p>auth_connect_timeout</p>
+<pre><code>用户身份验证后，连接后端数据库超时的秒数。默认3秒，增大这个值会使得 MaxScale 在中断用户连接后端数据库时等待更长的时间</code></pre></li>
+<li><p>auth_read_timeout</p>
+<pre><code>用户读超时时间，默认1秒</code></pre></li>
+<li><p>auth_write_timeout</p>
+<pre><code>用户写超时时间，默认2秒</code></pre></li>
+<li><p>ms_timestamp</p>
+<pre><code>是否支持高精度的时间记录格式，&lt;0|1&gt;</code></pre></li>
+<li><p>skip_permission_checks</p>
+<pre><code>跳过service 和 monitor 的用户权限检查，可以加快启动进度，默认禁用，boolean值设置</code></pre></li>
+<li><p>syslog</p>
+<pre><code>是否将日志写入 syslog，默认写入，&lt;0|1&gt;</code></pre></li>
+<li><p>maxlog</p>
+<pre><code>是否将日志计入 MaxScale 的日志，&lt;0|1&gt;</code></pre></li>
+<li><p>log_to_shm</p>
+<pre><code>是否将maxscale.log 文件写入共享内存，&lt;0|1&gt;，1则将当前日志写入/dev/shm文件下，且创建链接到 MaxScale log 路径下。适用于临时调试模式下使用这个配置</code></pre></li>
+<li><p>log_warning</p>
+<pre><code>是否记录 syslog 日志级别是 warning 的日志。默认开启。&lt;0|1&gt;</code></pre></li>
+<li><p>log_notice</p>
+<pre><code>是否记录 syslog 日志级别是 notice 的日志。默认开启。&lt;0|1&gt;</code></pre></li>
+<li><p>log_info</p>
+<pre><code>是否记录详细日志。因为日志量会非常大，默认关闭。&lt;0|1&gt;</code></pre></li>
+<li><p>log_debug</p>
+<pre><code>是否记录 syslog 日志级别是 debug 的日志。开发者目的使用，默认关闭。&lt;0|1&gt;，如果 MariaDB MaxScale 建立在 release mode 下，调试信息不会出现，参数无效</code></pre></li>
+<li><p>log_messages – log_notice替代</p>
+</li>
+<li><p>log_trace – log_info 替代</p>
+</li>
+<li><p>log_augmentation</p>
+<pre><code>是否记录附加信息，启用会在每条日志信息后追加改日志所属的函数名，默认关闭，&lt;0|1&gt;</code></pre></li>
+<li><p>log_throttling = X, Y, Z</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>        防止某种类型的日志不断循环出现,默认10, 1000, 10000，禁用=空字符串或者0,0,0。注意，notice,info,debug三种类型的信息不会被中断记录
+        e.g:log_throttling=8, 2000, 15000
+        如果某种类型的错误在2秒内记录了8次，则中断记录这类错误15秒
+
+- logdir
+
+            日志路径
+
+- datadir
+
+            MariaDB MaxScale 使用的数据的存储路径，例如，binlogrouter 将 binlog日志记录在这个路径下
+
+- libdir
+
+        MariaDB MaxScale 查找 modules 的路径
+        e.g:libdir=/home/user/lib64/
+
+- cachedir
+
+        MariaDB MaxScale 存储缓存数据的路径,例如权限信息等
+
+- piddir
+
+        MariaDB MaxScale PID进程文件存储路径
+
+- execdir
+
+        外部可执行文件的存储路径
+
+- connector_plugindir
+
+        连接引擎路径，二进制文件，connector_plugindir=/usr/lib/plugin/
+
+- persistdir
+
+        新增配置底层保存路径，不可修改，修改使用/etc/maxscale.cnf
+        persistdir=/var/lib/maxscale/maxscale.cnf.d/
+
+- module_configdir
+
+        module 配置存储路径，相对路径表示，默认/etc/maxscale.cnf.d/下存放
+
+- language
+
+        语言包 language=/home/user/lang/
+
+- query_classifier
+
+        指定发送的SQL类型，默认qc_sqlite
+
+- query_classifier_args
+
+        SQL类型识别参数配置
+        当query_classifier= qc_sqlite
+        可以支持 query_classifier_args=log_unrecognized_statements=N：
+        N=0:什么也不记录
+        N=1:记录完全不能被语法解析的SQL，可能是由于部分语法错误，或者关键字冲突
+        N=2:记录部分不能语法解析的SQL，可能是由于关键字冲突
+        N=3:记录不能语义解析的SQL
+
+        在定位是否 MaxScale 语句路由配置错误的时候，可以使用这个配置定位
+
+        Service 配置，一个service是代表一个 MaxScale 提供给客户端的数据库服务，一般一个service包含后端数据库服务器设置和路由算法，路由算法决定 MaxScale 把客户端的请求发送到哪一台后端数据库。一个service一段配置项
+        一个service可以作为 MaxScale 提供给客户端的虚拟数据库服务器，多个不同的service可能对应同样的后端数据库。例如，一个基于service的路由限制客户端只读或者读写，同时，另外一个基于语句的路由限制客户端不可以写。但是，同时这两个应用的配置都可以访问同一个数据库的数据。一个service 名区分一段service配置。
+        [TestA Service]
+        type=service
+
+- router，router_options
+
+        service的路由配置，用来补充 MaxScale 和后端数据库的路由算法。支持逗号分隔的属性列表配置，两个参数设置。更多配置可以使用独立的路由配置文件。
+        router=readconnroute
+        router_options=master,slave
+
+- filters
+
+        请求发送给后端数据库前的过滤检查，支持多个配置
+        filters=counter | QLA
+
+- servers
+
+        后端服务配置，支持多个
+        servers=server1,server2,server3
+
+- user，passwd
+
+        MaxScale 用来访问并从后端数据库获取用户信息的用户，认证失败 MaxScale 会每30s更新4次用户信息列表
+        user=maxscale
+        passwd=Mhu87p2D
+        连接的权限由 MaxScale 验证，而不是客户端要访问的后端数据库。客户端验证通过MaxScale记录的后端数据库的用户名，主机和密码
+
+- enable_root_user
+
+        是否允许root用户连接 MaxScale ，默认0/false
+
+- localhost_match_wildcard_host
+
+        是否允许本地登陆
+
+- version_string
+
+        指定mysql和 MaxScale 的版本
+
+- weightby
+
+        用来和server参数绑定，平衡用户负载，每个server定义一个变量及数值，service里通过这个参数绑定，如果server的变量的值是0或者小于0，则不会有访问被路由到这台server上。
+        例如：
+        [server1]
+        type=server
+        address=127.0.0.1
+        port=3000
+        protocol=MySQLBackend
+        serv_weight=3 //定义权重变量
+
+        [server2]
+        type=server
+        address=127.0.0.1
+        port=3001
+        protocol=MySQLBackend
+        serv_weight=1 //定义权重变量
+
+        [Read Service]
+        type=service
+        router=readconnroute
+        servers=server1,server2
+        weightby=serv_weight //绑定变量
+
+        如果没有这个参数，每个连接都被计为一个单独的连接，否则就按照权重分散连接
+- auth_all_servers
+
+        布尔值，配置是否一个独立的server服务还是所有的server都提供服务
+
+- strip_db_esc
+
+        布尔值，是否去除数据库名后的反斜杠
+
+- retry_on_failure
+
+        布尔值，是否重启失败的服务
+
+- log_auth_warnings
+
+        布尔值，是否记录登陆失败或者告警信息
+
+- connection_timeout
+
+        会话连接 MaxScale 的超时时间，默认不启用，单位秒
+
+- max_connections
+
+        MaxScale 允许同时连接某一个service 的最大数量</code></pre><ul>
+<li><p>Server 配置</p>
+<pre><code>server 部分的配置用来定义后端数据库服务器以何种模式关联到某一个service中。一个server可以是一个或者多个service的成员，配置项包括地址（IP），端口号，协议参数
+[server1]
+type=server
+address=127.0.0.1
+port=3000
+protocol=MySQLBackend</code></pre><ul>
+<li><p>address</p>
+<pre><code>IP 地址或者主机名，</code></pre></li>
+<li><p>port</p>
+<pre><code>监听端口号</code></pre></li>
+<li><p>protocol</p>
+<pre><code>协议模式，当前仅支持一种模式 MySQLBackend</code></pre></li>
+<li><p>monitoruser, monitorpw</p>
+<pre><code>监控所有server进程的用户和密码，每个server需提前配置</code></pre></li>
+<li><p>persistpoolmax</p>
+<pre><code>默认值0，DCB连接池上限</code></pre></li>
+<li><p>persistmaxtime</p>
+<pre><code>默认值0，DCB连接时间上限</code></pre></li>
+<li><p>Server and SSL</p>
+<pre><code>访问后端数据库的哦认证方式，SSL 需要配置 ssl参数并配置三个文件            ssl_cert,ssl_key,ssl_ca_cert。不使用SSL的访问将被拒绝</code></pre></li>
+<li><p>ssl</p>
+<pre><code>认证方式，设置后，还需要3个配置文件一起组合生效</code></pre></li>
+<li><p>ssl_key</p>
+<pre><code>可读客户端私钥文件，ssl参数必选</code></pre></li>
+<li><p>ssl_cert</p>
+<pre><code>可读的认证文件，ssl参数必选</code></pre></li>
+<li><p>ssl_ca_cert</p>
+<pre><code>可读CA认证文件，ssl参数必选</code></pre></li>
+<li><p>ssl_version</p>
+<pre><code>编码级别，支持：
+TLSv10
+TLSv11
+TLSv12
+MAX – 最高级别
+
+默认使用最高级别编码，OpenSSL 1.0及之后的版本使用TLSv1.2.，之前的版本使用TLSv1.0作为传输层协编码</code></pre></li>
+<li><p>ssl_cert_verification_depth</p>
+<pre><code>认证链深度，如果客户段提交一个SSL认证，ssl_cert_verification_depth等于0，如果没有制定，默认9
+ssl_cert_verification_depth=5</code></pre></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>SSL 配置示例</p>
+<pre><code>[server1]
+type=server
+address=10.131.24.62
+port=3306
+protocol=MySQLBackend
+#persistpoolmax=200
+persistmaxtime=3000
+ssl=required
+ssl_version=TLSv10
+ssl_cert=/usr/local/mariadb/maxscale/ssl/crt.max-client.pem
+ssl_key=/usr/local/mariadb/maxscale/ssl/key.max-client.pem
+ssl_ca_cert=/usr/local/mariadb/maxscale/ssl/crt.ca.maxscale.pem
+
+这个示例表示，所有的连接必须SSL编码，指定TLSv10编码级别，认证相关文件路径如上。</code></pre></li>
+<li><p>Listener</p>
+<pre><code>定义一对端口和协议的组合用来监听一个service。一个service可以有多个监听，其他参数项可选
+例如：
+[]
+type=listener
+service=]
+protocol=[MySQLClient|HTTPD]
+address=[IP|hostname]
+port=
+socket=</code></pre></li>
+<li><p>service</p>
+<pre><code>监听的service 名称</code></pre></li>
+<li><p>protocol</p>
+<pre><code>MaxScale 和客户段之间的协议模式</code></pre></li>
+<li><p>address</p>
+<pre><code>IP地址或者主机名，如果不设置，会监听所有的网络端口</code></pre></li>
+<li><p>port</p>
+<pre><code>监听用户连接 MaxScale 的端口，如果不设置，会使用默认的端口号</code></pre></li>
+<li><p>socket</p>
+<pre><code>unix套接字，如果配置了socket和address,会监听指定的IP地址和套接字</code></pre></li>
+<li><p>authenticator</p>
+<pre><code>认证模式，每个协议模块有默认的认证模式</code></pre></li>
+<li><p>authenticator_options</p>
+<pre><code>认证模式属性</code></pre></li>
+<li><p>Available Protocols</p>
+<pre><code>可用协议，MaxScale 支持的协议动态修改，允许在客户端和后端配置</code></pre></li>
+<li><p>MySQLClient</p>
+<pre><code>客户端连接 MaxScale 的一种协议模式</code></pre></li>
+<li><p>MySQLBackend</p>
+<pre><code>MaxScale 连接后端数据库的一种协议模式，支持 MariaDB, MySQL 和 Percona Server 数据库。这个协议是为支持MaxScale 定制裁剪的协议，不适用于普通的所有数据库。</code></pre></li>
+<li><p>telnetd</p>
+<pre><code>MaxScale 本身的连接协议</code></pre></li>
+<li><p>maxscaled</p>
+<pre><code>maxadmin 客户端连接 MaxScale的协议</code></pre></li>
+<li><p>HTTPD</p>
+<pre><code>开发版本，将支持浏览器或通过 RESTful API 访问 MaxScale</code></pre></li>
+</ul>
+<h3 id="2-3-Modules-说明"><a href="#2-3-Modules-说明" class="headerlink" title="2.3 Modules 说明"></a>2.3 Modules 说明</h3><ul>
+<li><p>Routing Modules 路由模块</p>
+<ul>
+<li><p>ReadConnRoute 连接负载均衡</p>
+</li>
+<li><p>ReadWriteSplit 读写语句识别</p>
+</li>
+<li><p>SchemaRouter 数据库级别分片</p>
+</li>
+<li><p>Binlogrouter 二进制日志服务</p>
+</li>
+</ul>
+</li>
+<li><p>Monitor Modules 诊断模块</p>
+<ul>
+<li><p>MaxAdmin Module</p>
+</li>
+<li><p>Telnet Module</p>
+</li>
+</ul>
+</li>
+<li><p>Monitor Modules 监控模块</p>
+<ul>
+<li><p>Mysql Monitor</p>
+</li>
+<li><p>Galera Monitor</p>
+</li>
+<li><p>NDBCluster Monitor</p>
+</li>
+<li><p>Multi-Master Monitor</p>
+</li>
+</ul>
+</li>
+<li><p>Filter Modules 过滤模块</p>
+<pre><code>- Query Log All (QLA) Filter
+
+- Regular Expression Filter</code></pre><ul>
+<li>Tee Filter</li>
+<li>Top Filter</li>
+<li>Database Firewall Filter</li>
+<li>Query Redirection Filter</li>
+<li>RabbitMQ Filter</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-4-Reloading-配置"><a href="#2-4-Reloading-配置" class="headerlink" title="2.4 Reloading 配置"></a>2.4 Reloading 配置</h3><ul>
+<li>当前支持动态修改的参数有</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">user</span><br><span class="line">passwd</span><br><span class="line">enable_root_user</span><br><span class="line">max_connections</span><br><span class="line">connection_timeout</span><br><span class="line">auth_all_servers</span><br><span class="line">optimize_wildcard</span><br><span class="line">strip_db_esc</span><br><span class="line">localhost_match_wildcard_host</span><br><span class="line">max_slave_connections</span><br><span class="line">max_slave_replication_lag</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>限制条件</p>
+<ul>
+<li>Service 必须在没有任何连接的情况下才可以从 MaxScale 物理移除</li>
+<li>线程数降低并不代表着完全的结束，直到当前操作完成才真正结束</li>
+<li>运行状态的 MaxScale 不可以移除所有监控</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/10/07/Maxscale安装部署/" data-id="ck1g5l0190004dmtu6oaphqol" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mariadb/">Mariadb</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/08/RDBMS中间件对比/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          RDBMS中间件对比
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/07/Database顶会4-4/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Database顶会4*4</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mariadb/">Mariadb</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Mariadb/" style="font-size: 10px;">Mariadb</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/Vitess组件与兼容性/">Vitess组件与兼容性</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/RDBMS中间件对比/">RDBMS中间件对比</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/07/Maxscale安装部署/">MariaDB Maxscale配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/07/Database顶会4-4/">Database顶会4*4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 ZhangWen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

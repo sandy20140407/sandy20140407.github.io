@@ -5,19 +5,22 @@
   
 
   
-  <title>Archives | Try Everything</title>
+  <title>Vitess特性与架构 | Try Everything</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="learning note">
+  <meta name="description" content="参考文档：123456789https://vitess.io/docs/overview/whatisvitess/https://vitess.io/docs/overview/architecture/https://github.com/vitessiohttps://vitess.io/blog/https://stackoverflow.com/search?q=vitess  特性">
 <meta name="keywords" content="GoLang,DBA">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Try Everything">
-<meta property="og:url" content="http://sandysandy.github.io/archives/index.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vitess特性与架构">
+<meta property="og:url" content="http://sandysandy.github.io/2019/10/08/Vitess特性与架构/index.html">
 <meta property="og:site_name" content="Try Everything">
-<meta property="og:description" content="learning note">
+<meta property="og:description" content="参考文档：123456789https://vitess.io/docs/overview/whatisvitess/https://vitess.io/docs/overview/architecture/https://github.com/vitessiohttps://vitess.io/blog/https://stackoverflow.com/search?q=vitess  特性">
 <meta property="og:locale" content="en,zh-cn">
+<meta property="og:image" content="https://vitess.io/docs/overview/img/VitessOverview.png">
+<meta property="og:updated_time" content="2019-10-07T08:24:54.220Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Try Everything">
-<meta name="twitter:description" content="learning note">
+<meta name="twitter:title" content="Vitess特性与架构">
+<meta name="twitter:description" content="参考文档：123456789https://vitess.io/docs/overview/whatisvitess/https://vitess.io/docs/overview/architecture/https://github.com/vitessiohttps://vitess.io/blog/https://stackoverflow.com/search?q=vitess  特性">
+<meta name="twitter:image" content="https://vitess.io/docs/overview/img/VitessOverview.png">
   
     <link rel="alternate" href="/atom.xml" title="Try Everything" type="application/atom+xml">
   
@@ -68,135 +71,91 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/08/Vitess特性与架构/" class="archive-article-date">
-  <time datetime="2019-10-07T16:20:39.000Z" itemprop="datePublished">Oct 7</time>
+        <section id="main"><article id="post-Vitess特性与架构" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/08/Vitess特性与架构/" class="article-date">
+  <time datetime="2019-10-07T16:20:39.000Z" itemprop="datePublished">2019-10-07</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
+    <h1 class="article-title" itemprop="name">
+      Vitess特性与架构
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/08/Vitess组件与兼容性/" class="archive-article-date">
-  <time datetime="2019-10-07T16:20:25.000Z" itemprop="datePublished">Oct 7</time>
-</a>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/08/Vitess组件与兼容性/">Vitess组件与兼容性</a>
-    </h1>
-  
+        <h2 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">https://vitess.io/docs/overview/whatisvitess/</span><br><span class="line"></span><br><span class="line">https://vitess.io/docs/overview/architecture/</span><br><span class="line"></span><br><span class="line">https://github.com/vitessio</span><br><span class="line"></span><br><span class="line">https://vitess.io/blog/</span><br><span class="line"></span><br><span class="line">https://stackoverflow.com/search?q=vitess</span><br></pre></td></tr></table></figure>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/08/RDBMS中间件对比/" class="archive-article-date">
-  <time datetime="2019-10-07T16:03:30.000Z" itemprop="datePublished">Oct 7</time>
-</a>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><ul>
+<li><p>性能</p>
+<ul>
+<li>连接池</li>
+<li>SQL复用</li>
+<li>事务管理</li>
+</ul>
+</li>
+<li><p>防护</p>
+<ul>
+<li>SQL重写和限制</li>
+<li>SQL黑名单</li>
+<li>SQL中断</li>
+<li>表访问控制</li>
+</ul>
+</li>
+<li><p>监控</p>
+<ul>
+<li>性能优化工具帮助监控，诊断和分析数据库的性能数据</li>
+</ul>
+</li>
+<li><p>管理工具拓扑</p>
+<ul>
+<li>主管理工具</li>
+<li>图形化管理</li>
+<li>支持多数据中心/数据分区</li>
+</ul>
+</li>
+<li><p>分片</p>
+<ul>
+<li>虚拟的动态二次分片</li>
+<li>支持水平&amp;垂直分片</li>
+<li>分片管理</li>
+</ul>
+</li>
+<li><p>架构<br><img src="https://vitess.io/docs/overview/img/VitessOverview.png" alt="Vitess-architecture"></p>
+</li>
+</ul>
+
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/08/RDBMS中间件对比/">RDBMS中间件对比</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/07/Maxscale安装部署/" class="archive-article-date">
-  <time datetime="2019-10-07T15:40:56.000Z" itemprop="datePublished">Oct 7</time>
-</a>
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess特性与架构/" data-id="ck1g5l00v0002dmtu31z465zh" class="article-share-link">Share</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/07/Maxscale安装部署/">MariaDB Maxscale配置</a>
-    </h1>
-  
-
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/07/Database顶会4-4/" class="archive-article-date">
-  <time datetime="2019-10-07T15:37:10.000Z" itemprop="datePublished">Oct 7</time>
-</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/07/Database顶会4-4/">Database顶会4*4</a>
-    </h1>
-  
-
-    </header>
+    </footer>
   </div>
-</article>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/10/07/hello-world/" class="archive-article-date">
-  <time datetime="2019-10-07T07:02:52.076Z" itemprop="datePublished">Oct 7</time>
-</a>
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/10/07/hello-world/">Hello World</a>
-    </h1>
   
+    <a href="/2019/10/08/Vitess组件与兼容性/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Vitess组件与兼容性</div>
+    </a>
+  
+</nav>
 
-    </header>
-  </div>
+  
 </article>
-  
-  
-    </div></section>
-  
-
 
 </section>
         

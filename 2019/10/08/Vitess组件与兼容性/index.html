@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Vitess组件与兼容性 | Try Everything</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="组件 Topology 元数据存储，包括运行的实例，分片结构以及复制关系。可以通过vtctl或者vtctld扩展。 在k8s上，数据存储在etcd，也支持Apache Zookeepr vtgate 轻量级转发服务，负责把SQL分发到正确的vttablets并返回合并后的结果给客户端。客户端只需要找到一个vtgate实例即可 分发SQL，需要考虑分片结构，查询延迟，表可用性以及底层MySQL实例状">
+<meta name="keywords" content="GoLang,DBA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vitess组件与兼容性">
+<meta property="og:url" content="http://sandysandy.github.io/2019/10/08/Vitess组件与兼容性/index.html">
+<meta property="og:site_name" content="Try Everything">
+<meta property="og:description" content="组件 Topology 元数据存储，包括运行的实例，分片结构以及复制关系。可以通过vtctl或者vtctld扩展。 在k8s上，数据存储在etcd，也支持Apache Zookeepr vtgate 轻量级转发服务，负责把SQL分发到正确的vttablets并返回合并后的结果给客户端。客户端只需要找到一个vtgate实例即可 分发SQL，需要考虑分片结构，查询延迟，表可用性以及底层MySQL实例状">
+<meta property="og:locale" content="en,zh-cn">
+<meta property="og:updated_time" content="2019-10-07T08:28:15.096Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vitess组件与兼容性">
+<meta name="twitter:description" content="组件 Topology 元数据存储，包括运行的实例，分片结构以及复制关系。可以通过vtctl或者vtctld扩展。 在k8s上，数据存储在etcd，也支持Apache Zookeepr vtgate 轻量级转发服务，负责把SQL分发到正确的vttablets并返回合并后的结果给客户端。客户端只需要找到一个vtgate实例即可 分发SQL，需要考虑分片结构，查询延迟，表可用性以及底层MySQL实例状">
+  
+    <link rel="alternate" href="/atom.xml" title="Try Everything" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Try Everything</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">just move it</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://sandysandy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Vitess组件与兼容性" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/08/Vitess组件与兼容性/" class="article-date">
+  <time datetime="2019-10-07T16:20:25.000Z" itemprop="datePublished">2019-10-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vitess组件与兼容性
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h2><ul>
+<li><p>Topology</p>
+<pre><code>元数据存储，包括运行的实例，分片结构以及复制关系。可以通过vtctl或者vtctld扩展。
+在k8s上，数据存储在etcd，也支持Apache Zookeepr</code></pre></li>
+<li><p>vtgate</p>
+<pre><code>轻量级转发服务，负责把SQL分发到正确的vttablets并返回合并后的结果给客户端。客户端只需要找到一个vtgate实例即可
+分发SQL，需要考虑分片结构，查询延迟，表可用性以及底层MySQL实例状态</code></pre></li>
+<li><p>vttablet</p>
+<pre><code>每个MySQL实例上的轻量转发服务，一对一关系
+通过连接池，语句重写，语句复用来充分利用每一个MySQL实例的性能
+支持任务管理，包括vtctl初始化，复制匹配和数据导出
+取代MySQL driver作为Vitess的客户端提供应用连接</code></pre></li>
+<li><p>vtctl</p>
+<pre><code>命令行工具管理Vitess 集群
+定义主库，从库关系，建表，启动故障转移，执行分片操作等等
+运行时，其他组件动态更新服务状态，例如，使用vtctl执行故障切换到新主库是，vtgate捕捉到这个变化，直接将新的写请求转发到新的主库上</code></pre></li>
+<li><p>vtctld</p>
+<pre><code>HTTP服务，帮助后台存储信息
+用于故障排查或全局数据概览</code></pre></li>
+<li><p>vtworker</p>
+<pre><code>管理长任务
+支持扩展架构，提供多种库
+分片或者聚合任务过程中，分解不同任务&amp;检查数据一致性
+虚拟分解或者聚合过程中，虚拟分解不同的任务&amp;检查数据一致性
+支持添加存储过程，外键等</code></pre></li>
+</ul>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><ul>
+<li>原生协议支持JDBC，GO数据库驱动</li>
+<li>MySQL服务协议支持的其他开发语言</li>
+<li>支持MySQL 5.6+ and MariaDB 10.0+</li>
+<li>云原生，Vitess operator</li>
+</ul>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a href="https://vitess.io/docs/overview/whatisvitess/" target="_blank" rel="noopener">https://vitess.io/docs/overview/whatisvitess/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess组件与兼容性/" data-id="ck1g5l00m0000dmtuccuub4rk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/08/Vitess特性与架构/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Vitess特性与架构
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/08/RDBMS中间件对比/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">RDBMS中间件对比</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mariadb/">Mariadb</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Mariadb/" style="font-size: 10px;">Mariadb</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/Vitess组件与兼容性/">Vitess组件与兼容性</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/RDBMS中间件对比/">RDBMS中间件对比</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/07/Maxscale安装部署/">MariaDB Maxscale配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/07/Database顶会4-4/">Database顶会4*4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 ZhangWen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

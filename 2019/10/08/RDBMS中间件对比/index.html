@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>RDBMS中间件对比 | Try Everything</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="名称 Mycat Atlas Shazam Vitess Kingshard Mariadb MaxScale MySQL Proxy DBProxy Heisenberg    研发团队 Mycat社区 奇虎360 nooncall YouTube flike(个人) Mariadb 官方 MySQL官方 美团点评 百度   研发语言 Java Java Go Go Go C C Java">
+<meta name="keywords" content="GoLang,DBA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RDBMS中间件对比">
+<meta property="og:url" content="http://sandysandy.github.io/2019/10/08/RDBMS中间件对比/index.html">
+<meta property="og:site_name" content="Try Everything">
+<meta property="og:description" content="名称 Mycat Atlas Shazam Vitess Kingshard Mariadb MaxScale MySQL Proxy DBProxy Heisenberg    研发团队 Mycat社区 奇虎360 nooncall YouTube flike(个人) Mariadb 官方 MySQL官方 美团点评 百度   研发语言 Java Java Go Go Go C C Java">
+<meta property="og:locale" content="en,zh-cn">
+<meta property="og:updated_time" content="2019-10-07T08:17:45.864Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RDBMS中间件对比">
+<meta name="twitter:description" content="名称 Mycat Atlas Shazam Vitess Kingshard Mariadb MaxScale MySQL Proxy DBProxy Heisenberg    研发团队 Mycat社区 奇虎360 nooncall YouTube flike(个人) Mariadb 官方 MySQL官方 美团点评 百度   研发语言 Java Java Go Go Go C C Java">
+  
+    <link rel="alternate" href="/atom.xml" title="Try Everything" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Try Everything</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">just move it</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://sandysandy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-RDBMS中间件对比" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/08/RDBMS中间件对比/" class="article-date">
+  <time datetime="2019-10-07T16:03:30.000Z" itemprop="datePublished">2019-10-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RDBMS中间件对比
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <table>
+<thead>
+<tr>
+<th align="center">名称</th>
+<th align="center">Mycat</th>
+<th align="center">Atlas</th>
+<th align="center">Shazam</th>
+<th align="center">Vitess</th>
+<th align="center">Kingshard</th>
+<th align="center">Mariadb MaxScale</th>
+<th align="center">MySQL Proxy</th>
+<th align="center">DBProxy</th>
+<th align="center">Heisenberg</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">研发团队</td>
+<td align="center">Mycat社区</td>
+<td align="center">奇虎360</td>
+<td align="center">nooncall</td>
+<td align="center">YouTube</td>
+<td align="center">flike(个人)</td>
+<td align="center">Mariadb 官方</td>
+<td align="center">MySQL官方</td>
+<td align="center">美团点评</td>
+<td align="center">百度</td>
+</tr>
+<tr>
+<td align="center">研发语言</td>
+<td align="center">Java</td>
+<td align="center">Java</td>
+<td align="center">Go</td>
+<td align="center">Go</td>
+<td align="center">Go</td>
+<td align="center">C</td>
+<td align="center">C</td>
+<td align="center">Java</td>
+<td align="center">Java</td>
+</tr>
+<tr>
+<td align="center">是否开源 &amp; 最后更新</td>
+<td align="center">now</td>
+<td align="center">基于My SQL-Proxy-0.8.2，last update：2013</td>
+<td align="center">now</td>
+<td align="center">now</td>
+<td align="center">now</td>
+<td align="center">now</td>
+<td align="center">2015    基于Altas，last update：2018，</td>
+<td align="center">只支持MySQL5.5&amp;5.6</td>
+<td align="center">否</td>
+</tr>
+<tr>
+<td align="center">魔改难度</td>
+<td align="center">🌟🌟🌟🌟🌟</td>
+<td align="center">🌟🌟🌟🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">🌟🌟🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">🌟🌟🌟🌟🌟</td>
+<td align="center">🌟🌟🌟🌟🌟</td>
+<td align="center">不支持MariaDB</td>
+<td align="center">非开源项目</td>
+</tr>
+<tr>
+<td align="center">功能完整度</td>
+<td align="center">🌟🌟🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">🌟🌟🌟🌟🌟</td>
+<td align="center">🌟🌟</td>
+<td align="center">🌟🌟🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="center">与当前架构兼容程度</td>
+<td align="center">🌟🌟</td>
+<td align="center">—</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">🌟🌟</td>
+<td align="center">🌟🌟</td>
+<td align="center">🌟🌟🌟</td>
+<td align="center">—</td>
+<td align="center">—</td>
+<td align="center">—</td>
+</tr>
+<tr>
+<td align="center">功能列表</td>
+<td align="center">1.支持SQL92标准;2.遵守Mysql原生协议，跨语言，跨平台，跨数据库的通用中间件代理。3.基于心跳的自动故障切换，支持读写分离，支持MySQL主从，以及galera cluster集群。4.支持Galera for MySQL集群，Percona Cluster或者MariaDB cluster5.基于Nio实现，有效管理线程，高并发问题。6.支持数据的多片自动路由与聚合，支持sum,count,max等常用的聚合函数。7.支持单库内部任意join，支持跨库2表join，甚至基于caltlet的多表join。8.支持通过全局表，ER关系的分片策略，实现了高效的多表join查询。9.支持多租户方案。10.支持分布式事务（弱xa）。11.支持全局序列号，解决分布式下的主键生成问题。12.分片规则丰富，插件化开发，易于扩展。13.强大的web，命令行监控。14.支持前端作为mysq通用代理，后端JDBC方式支持Oracle、DB2、SQL Server 、 mongodb 、巨杉。15.支持密码加密16.支持服务降级17.支持IP白名单18.支持SQL黑名单、sql注入攻击拦截19.支持分表（1.6）20.集群基于ZooKeeper管理，在线升级，扩容，智能优化，大数据处理（2.0开发版）。”</td>
+<td align="center">1.读写分离.2.从库负载均衡,3.IP过滤,4.自动分表,5.DBA可平滑上下线DB,6.自动摘除宕机的DB,7.将主流程中所有Lua代码用C重写，Lua仅用于管理接口,8.重写网络模型、线程模型.9.实现了真正意义上的连接池.10.优化了锁机制，性能提高数十倍”</td>
+<td align="center">“基础功能,多租户,SQL透明转发,慢SQL指纹,错误SQL指纹,注解路由,慢日志,读写分离，从库负载均衡,自定义SQL拦截与过滤,连接池,配置热加载,IP/IP段白名单,全局序列号,分库、分表功能,分库: 支持mycat分库方式,分表: 支持kingshard分表方式,聚合函数: 支持max、min、sum、count、group by、order by等;join: 支持分片表和全局表的join、支持多个分片表但是路由规则相同的join</td>
+<td align="center">性能,连接池 - 扩展了前端连接的数量，同时优化了 MySql 性能。去除重复查询 - 在动态查询还在执行的时候，对于后续任何完全相同的请求都重用同一个动态查询的结果。事务管理器 - 限制并发事务的数量并管理每个事务的执行最后期限以优化整体吞吐量。行缓存 - 对于需要根据主键随机访问的更有效字段的查询维护了一个基于行的缓存(使用 memcached)，这对于 OLTP 工作负载非常有用。(MySql 的缓冲区缓存优化也只是针对索引和表范围的扫描。)。这一卓越特性可以将在应用程序层自定义的缓存层实现给替换掉了。防御:查询重写和净化 - 添加限制并防止不确定性的更新。查询黑名单 - 自定义规则以防止潜在的有问题的查询提交到你的数据库。查询杀手 - 终止那些需要很长时间才能返回数据的查询。表 ACLs - 根据连接用户为表定义访问控制列表(ACLs)。监控:性能分析 - 提供对你的数据库性能进行监控、诊断和分析的工具。查询流水号 - 使用一张记载传入的查询的列表来侍服 OLAP 负载。更新流水号 - 一个记载了数据库中行的变化流水号的服务器，这可以用来作为一种来将更改传播到其他数据存储的机制。拓扑管理工具:主库管理工具(处理重新定义).基于 web 的管理界面,设计用于多个数据中心/区域的场合.分片:几乎无缝的重新分片;垂直和水平分片的支持;内置的基于范围或应用程序而定义的分片支持.架构:Vitess 平台由若干服务器进程、命令行工具和基于 web 的工具组成，具备一致性元数据存储支持。</td>
+<td align="center">1. 基础功能,支持SQL读写分离。支持透明的MySQL连接池，不必每次新建连接。支持平滑上线DB或下线DB，前端应用无感知。支持多个slave，slave之间通过权值进行负载均衡。支持强制读主库。支持主流语言（java,php,python,C/C++,Go)SDK的mysql的prepare特性。支持到后端DB的最大连接数限制。支持SQL日志及慢日志输出。支持SQL黑名单机制。支持客户端IP访问白名单机制，只有白名单中的IP才能访问kingshard（支持IP 段）。支持字符集设置。支持last_insert_id功能。支持热加载配置文件，动态修改kingshard配置项（具体参考管理端命令）。支持以Web API调用的方式管理kingshard。支持多用户模式，不同用户之间的表是权限隔离的，互补感知。2. sharding功能支持按整数的hash和range分表方式。支持按年、月、日维度的时间分表方式。支持跨节点分表，子表可以分布在不同的节点。支持跨节点的count,sum,max和min等聚合函数。支持单个分表的join操作，即支持分表和另一张不分表的join操作。支持跨节点的order by,group by,limit等操作。支持将sql发送到特定的节点执行。支持在单个节点上执行事务，不支持跨多节点的分布式事务。支持非事务方式更新（insert,delete,update,replace）多个node上的子表。</td>
+<td align="center">1.链接路由,2.读写分离,3.集群管理,4.日志路由,5.HA,6.复制管理,7.简单分库,8.Rabbit MQ”</td>
+<td align="center">官方已下线</td>
+<td align="center">1.支持多语言MySQL客户端,2.读写分离,3.负载均衡,4.Slave故障感知与摘除（Master需要MHA等其他联动）,5.后端连接池,6.自定义SQL拦截与过滤,7.流量分组与控制,8.丰富的监控状态.9.支持分表,10.Client IP限制”    “</td>
+<td align="center">1.分库分表;2.读写分离”</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/10/08/RDBMS中间件对比/" data-id="ck1g5l00q0001dmtufloorem2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/08/Vitess组件与兼容性/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Vitess组件与兼容性
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/10/07/Maxscale安装部署/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">MariaDB Maxscale配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mariadb/">Mariadb</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Mariadb/" style="font-size: 10px;">Mariadb</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/Vitess组件与兼容性/">Vitess组件与兼容性</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/RDBMS中间件对比/">RDBMS中间件对比</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/07/Maxscale安装部署/">MariaDB Maxscale配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/07/Database顶会4-4/">Database顶会4*4</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 ZhangWen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
