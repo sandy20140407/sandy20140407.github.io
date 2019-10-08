@@ -70,6 +70,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-TiDB配置文件" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/08/TiDB配置文件/" class="article-date">
+  <time datetime="2019-10-08T09:37:01.000Z" itemprop="datePublished">2019-10-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/10/08/TiDB配置文件/">TiDB配置文件</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="inventory-ini"><a href="#inventory-ini" class="headerlink" title="inventory.ini"></a>inventory.ini</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">## TiDB Cluster Part</span><br><span class="line">[tidb_servers]</span><br><span class="line"># tidb节点，默认端口4000，建议指定部署路径，区分其他节点</span><br><span class="line">tidb-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[tikv_servers]</span><br><span class="line"># tikv节点，默认端口20160，监控端口20180，多实例建议显示指定端口及部署路径</span><br><span class="line">tikv-1  ansible_host=x.x.x.x  deploy_dir=/xxx/xxx tikv_port=20160 tikv_status_port=20180 labels=&quot;zone=xxx,rack=xxx,host=xxx&quot;</span><br><span class="line"></span><br><span class="line">[pd_servers]</span><br><span class="line"># pd节点，一个集群至少3个pd节点，增加或者减少保持在奇数个节点在线，默认端口2379</span><br><span class="line">tipd-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[lightning_server]</span><br><span class="line"># lightning 导数据节点，独立于集群部署</span><br><span class="line">lt-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line">[importer_server]</span><br><span class="line"># importer 导数据节点，独立于集群部署 </span><br><span class="line">im-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line">## Monitoring Part</span><br><span class="line"># prometheus and pushgateway servers</span><br><span class="line"># 监控节点</span><br><span class="line">[monitoring_servers]</span><br><span class="line">moni-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line">[grafana_servers]</span><br><span class="line">graf-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line"># node_exporter and blackbox_exporter servers</span><br><span class="line"># 节点数据收集上报端口，默认9200</span><br><span class="line">[monitored_servers]</span><br><span class="line">x.x.x.x node_exporter_port=xxxx</span><br><span class="line"></span><br><span class="line">[alertmanager_servers]</span><br><span class="line"># 告警节点</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## Binlog Part</span><br><span class="line">[pump_servers]</span><br><span class="line"># binlog收集节点，配合drainer</span><br><span class="line">pump-1 ansible_host=x.x.x.x deploy_dir=/xxx/xxx</span><br><span class="line"></span><br><span class="line">[drainer_servers]</span><br><span class="line"># drainer 节点消费pump数据，互相依赖，支持数据格式：mysql，pb，kafka</span><br><span class="line">drainer_pb ansible_host=x.x.x.x initial_commit_ts=&quot;xxxxxx&quot;</span><br><span class="line"></span><br><span class="line">## Group variables</span><br><span class="line"># 全局设置</span><br><span class="line">[pd_servers:vars]</span><br><span class="line"># kv节点 label格式</span><br><span class="line">location_labels = [&quot;zone&quot;,&quot;rack&quot;,&quot;host&quot;]</span><br><span class="line"></span><br><span class="line">## Global variables</span><br><span class="line">[all:vars]</span><br><span class="line"># 默认部署路径</span><br><span class="line">deploy_dir = /xxx/xxx</span><br><span class="line"></span><br><span class="line">## Connection</span><br><span class="line"># ssh via normal user</span><br><span class="line">ansible_user = tidb</span><br><span class="line"></span><br><span class="line">cluster_name = tidb-cluster-info</span><br><span class="line"></span><br><span class="line"># 升级注意版本正确</span><br><span class="line">tidb_version = v3.0.3</span><br><span class="line"></span><br><span class="line"># process supervision, [systemd, supervise]</span><br><span class="line">process_supervision = systemd</span><br><span class="line"></span><br><span class="line">timezone = Asia/Shanghai</span><br><span class="line"></span><br><span class="line"># store slow query log into seperate file</span><br><span class="line">enable_slow_query_log = True</span><br><span class="line"></span><br><span class="line"># enable TLS authentication in the TiDB cluster</span><br><span class="line">enable_tls = False</span><br><span class="line"></span><br><span class="line"># KV mode</span><br><span class="line">deploy_without_tidb = False</span><br><span class="line"></span><br><span class="line"># Optional: Set if you already have a alertmanager server.</span><br><span class="line"># Format: alertmanager_host:alertmanager_port</span><br><span class="line">alertmanager_target = &quot;&quot;</span><br><span class="line"></span><br><span class="line">grafana_admin_user = &quot;admin&quot;</span><br><span class="line">grafana_admin_password = &quot;admin&quot;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### Collect diagnosis</span><br><span class="line">collect_log_recent_hours = 2</span><br><span class="line"></span><br><span class="line">enable_bandwidth_limit = True</span><br><span class="line"># default: 10Mb/s, unit: Kbit/s</span><br><span class="line">collect_bandwidth_limit = 10000</span><br></pre></td></tr></table></figure>
+
+<h3 id="conf-tikv-yml"><a href="#conf-tikv-yml" class="headerlink" title="conf/tikv.yml"></a>conf/tikv.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 关闭sysnc-log， 提高kv写入性能，但牺牲了单个副本的数据一致性</span><br><span class="line">sysnc-log=false</span><br><span class="line"></span><br><span class="line"># 日志大小及保留个数</span><br><span class="line">info-log-size=1GB</span><br><span class="line">info-log-num=10</span><br></pre></td></tr></table></figure>
+
+<h3 id="conf-tidb-yml"><a href="#conf-tidb-yml" class="headerlink" title="conf/tidb.yml"></a>conf/tidb.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 慢日志记录阀值</span><br><span class="line">slow-log=200ms</span><br></pre></td></tr></table></figure>
+
+<h3 id="common-tasks-add-evict-leader-scheduler-yml"><a href="#common-tasks-add-evict-leader-scheduler-yml" class="headerlink" title="common_tasks/add_evict_leader_scheduler.yml"></a>common_tasks/add_evict_leader_scheduler.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 滚动升级或者修改配置时，每个节点实例online数据的检查次数，</span><br><span class="line"># 建议调整一个较大数值，保证每个需要重启的节点上online数据已迁移完毕</span><br><span class="line">retries=10000</span><br></pre></td></tr></table></figure>
+
+<h3 id="group-vars-all-yml"><a href="#group-vars-all-yml" class="headerlink" title="group_vars/all.yml"></a>group_vars/all.yml</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 全局日志保留设置，是否清理</span><br><span class="line">enable_log_clean: True</span><br><span class="line">log_retain_days: 2</span><br></pre></td></tr></table></figure>
+
+<h3 id="集群启动后设置GC"><a href="#集群启动后设置GC" class="headerlink" title="集群启动后设置GC"></a>集群启动后设置GC</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 设置数据闪回时间</span><br><span class="line">update mysql.tidb set VARIABLE_VALUE=&quot;24h&quot; where VARIABLE_NAME=&quot;tikv_gc_life_time&quot;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/10/08/TiDB配置文件/" data-id="ck1h7mrp10000l5tuciau80ur" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TiDB/">TiDB</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Vitess特性与架构" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/10/08/Vitess特性与架构/" class="article-date">
@@ -136,7 +184,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess特性与架构/" data-id="ck1g5mxjg0000yztua56r950r" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess特性与架构/" data-id="ck1h7mrpe0004l5tu070i4kse" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
@@ -207,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess组件与兼容性/" data-id="ck1g5mxjl0001yztui0hp7wej" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess组件与兼容性/" data-id="ck1h7mrpf0005l5tuzxt5i2ih" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
@@ -345,7 +393,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/RDBMS中间件对比/" data-id="ck1g5mxjo0003yztufjs2tk36" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/RDBMS中间件对比/" data-id="ck1h7mrp90001l5tuc1q5n109" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RDBMS-MariaDB/">RDBMS,MariaDB</a></li></ul>
@@ -759,7 +807,7 @@ socket=</code></pre></li>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/07/Maxscale安装部署/" data-id="ck1g5mxk0000ayztu2qa0d3iv" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/07/Maxscale安装部署/" data-id="ck1h7mrpq000dl5tuwxlc0mlc" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mariadb/">Mariadb</a></li></ul>
@@ -1487,7 +1535,7 @@ Rakesh Agrawal:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/07/Database顶会4-4/" data-id="ck1g5mxkb000dyztu5nabb4nq" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/07/Database顶会4-4/" data-id="ck1h7mrq1000gl5tuwi8r0io0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Meeting/">Meeting</a></li></ul>
@@ -1538,7 +1586,7 @@ Rakesh Agrawal:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/07/hello-world/" data-id="ck1g5mxjq0004yztubgltrawk" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/07/hello-world/" data-id="ck1h7mrpd0003l5tug2j1docv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -1561,7 +1609,7 @@ Rakesh Agrawal:
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mariadb/">Mariadb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Meeting/">Meeting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RDBMS-MariaDB/">RDBMS,MariaDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mariadb/">Mariadb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Meeting/">Meeting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RDBMS-MariaDB/">RDBMS,MariaDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TiDB/">TiDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
     </div>
   </div>
 
@@ -1571,7 +1619,7 @@ Rakesh Agrawal:
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Mariadb/" style="font-size: 10px;">Mariadb</a> <a href="/tags/Meeting/" style="font-size: 10px;">Meeting</a> <a href="/tags/RDBMS-MariaDB/" style="font-size: 10px;">RDBMS,MariaDB</a> <a href="/tags/Vitess/" style="font-size: 20px;">Vitess</a>
+      <a href="/tags/Mariadb/" style="font-size: 10px;">Mariadb</a> <a href="/tags/Meeting/" style="font-size: 10px;">Meeting</a> <a href="/tags/RDBMS-MariaDB/" style="font-size: 10px;">RDBMS,MariaDB</a> <a href="/tags/TiDB/" style="font-size: 10px;">TiDB</a> <a href="/tags/Vitess/" style="font-size: 20px;">Vitess</a>
     </div>
   </div>
 
@@ -1593,6 +1641,10 @@ Rakesh Agrawal:
       <ul>
         
           <li>
+            <a href="/2019/10/08/TiDB配置文件/">TiDB配置文件</a>
+          </li>
+        
+          <li>
             <a href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
           </li>
         
@@ -1606,10 +1658,6 @@ Rakesh Agrawal:
         
           <li>
             <a href="/2019/10/07/Maxscale安装部署/">MariaDB Maxscale配置</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/07/Database顶会4-4/">Database顶会4*4</a>
           </li>
         
       </ul>
