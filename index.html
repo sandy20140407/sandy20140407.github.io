@@ -70,6 +70,150 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-TiDB学习记录-数据迁移" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/TiDB学习记录-数据迁移/" class="article-date">
+  <time datetime="2019-11-17T14:16:27.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/17/TiDB学习记录-数据迁移/">TiDB学习记录-数据迁移</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="TiDB集群和他的朋友们"><a href="#TiDB集群和他的朋友们" class="headerlink" title="TiDB集群和他的朋友们"></a>TiDB集群和他的朋友们</h3><ul>
+<li><p><a href="https://pingcap.com/docs-cn/stable/reference/tools/mydumper/" target="_blank" rel="noopener">官方文档</a></p>
+</li>
+<li><p>TiDB Binlog 是一个用于收集 TiDB 的 binlog，并提供准实时备份和同步功能的商业工具。</p>
+<ul>
+<li>主要组成：Pump，Drainer，binlogctl<ul>
+<li>Pump，记录binlog并按照事务的提交时间排序，提供给Drainer消费</li>
+<li>Drainer，从集群的每个pump收集binlog进行合并，转化成指定格式（mysql/tidb，file，kafka，pb）同步到下游</li>
+<li>binlogctl，命令行管理工具，查看&amp;更新pump/drainer状态</li>
+</ul>
+</li>
+<li>tips<ul>
+<li>Ansible统一部署维护</li>
+<li>pump&amp;drainer状态互相依赖，如果有异常，用binlogctl检查两者状态</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>Mydumper + Loader TiDB备份及恢复工具</p>
+<ul>
+<li><p>fork Mydumper &amp; 优化针对TiDB特性，比如可以设置时间戳指定备份时间等。注意，如果集群单表数据量大，建议设置参数对导出文件进行分割，方便在使用备份文件夹恢复时，可以充分利用多线程加快恢复速度。</p>
+</li>
+<li><p>Loader 官方自研，能够读取Mydumper的输出文件，通过MySQL protocol 向TiDB/MySQL中导入数据</p>
+</li>
+</ul>
+</li>
+<li><p>Syncer 增量数据同步工具，将MySQL的数据增量导入到TiDB，作为MySQL的一个从库的角色，根据binlog+position的位置拉取上游数据，同步到下游集群</p>
+<ul>
+<li>功能支持<ul>
+<li>支持gtid，binglog+position</li>
+<li>支持同步过滤白名单/黑名单</li>
+<li>支持所有或者指定库表的DDL/DML跳过</li>
+<li>支持上游多个数据来源的合并到下游集群，指定sharding规则实现</li>
+<li>同步前检查上游数据库版本，字符集，sqlmode，同步的表是否有主键或者唯一索引</li>
+</ul>
+</li>
+<li>通过prometheus监控告警同步状态，上下游数据同步位置等</li>
+</ul>
+</li>
+<li><p>Data Migration（DM）一体化的数据同步任务管理平台，支持从 MySQL 或 MariaDB 到 TiDB 的全量数据迁移和增量数据同步。使用 DM 工具有利于简化错误处理流程，降低运维成本</p>
+<ul>
+<li>主要结构：DM-master，DM-worker，dmctl<ul>
+<li>DM-master，管理调度DM-worker<ul>
+<li>DM-worker，执行具体的同步task，dumper + loader + syncer/binlogrepl</li>
+<li>dmctl，命令行工具</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>分库分表合并，白名单/黑名单，过滤指定类型binlog，同步延迟监控</li>
+<li>多个上游变更合并下发，一个worker可以支持多个任务，支持多个woker</li>
+<li>任务复杂是，借助网页程序 DM Portal 生成可以直接让woker执行的task配置文件</li>
+</ul>
+</li>
+<li><p>TiDB Lighting 全量数据高速导入TiDB工具</p>
+<ul>
+<li>主要结构：tidb-lighting，tikv-importer<ul>
+<li>tidb-lighting，读取上游数据源，在下游建表，将数据转换成kv对发送给tikv-importer，检查数据完整性等</li>
+<li>tikv-importer，将lighting发来的kv对缓存，排序，切分并导入到TiKV集群</li>
+</ul>
+</li>
+<li>tips<ul>
+<li>独立于下游TiDB集群部署，避免资源争用，加快导入速度</li>
+<li>导入过程中，集群不可用</li>
+<li>上游数据文件最好是小文件形式，部署多个Lighting+importer 加速导入</li>
+<li>lighting异常可以重启，重启前清理临时sock文件</li>
+<li>断点续传信息存储文件或者单独数据库</li>
+<li>注意目标集群空间足够，总存储必须 &gt;  数据源大小 * 副本数量 * 2</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>PD Control 是 PD 的命令行工具，用于获取集群状态信息和调整集群，基本信息在PD 监控面板也可以看到，主要用来集群配置参数调整，调度参数调整，store 节点管理 等</p>
+</li>
+</ul>
+<h3 id="上下游数据迁移有多少种排列组合"><a href="#上下游数据迁移有多少种排列组合" class="headerlink" title="上下游数据迁移有多少种排列组合"></a>上下游数据迁移有多少种排列组合</h3><ul>
+<li><p>从哪里来</p>
+<ul>
+<li>从Mydumper备份文件来，可以选择的交通方式有<ul>
+<li>Lighting</li>
+</ul>
+</li>
+<li>从CSV来，可选择的交通方式有<ul>
+<li>Lighting</li>
+</ul>
+</li>
+<li>从MySQL来，可以选择的交通方式有<ul>
+<li>Syncer</li>
+<li>DM</li>
+</ul>
+</li>
+<li>从Amazon Aurora来，可选择的交通方式有<ul>
+<li>DM</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>到哪里去，都用 Pump + Drainer</p>
+<ul>
+<li>去MySQL/TiDB</li>
+<li>去Kafka</li>
+<li>去flash</li>
+<li>去file</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/11/17/TiDB学习记录-数据迁移/" data-id="ck32lyeaa0001botuyr4rkm77" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-TiDB学习记录-监控入门" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/11/17/TiDB学习记录-监控入门/" class="article-date">
@@ -195,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/11/17/TiDB学习记录-监控入门/" data-id="ck32j7ak100007ituv68vy6tr" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/11/17/TiDB学习记录-监控入门/" data-id="ck32lyeae0003botuxyyo7b6g" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TiDB/">TiDB</a></li></ul>
@@ -451,7 +595,7 @@ tikv-1  ansible_host=x.x.x.x  deploy_dir=/xxx/xxx tikv_port=20160 tikv_status_po
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/11/02/TiDB学习记录/" data-id="ck32j7akb00037itutj22jxc6" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/11/02/TiDB学习记录/" data-id="ck32lyeag0004botursm5dc1r" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TiDB/">TiDB</a></li></ul>
@@ -499,7 +643,7 @@ tikv-1  ansible_host=x.x.x.x  deploy_dir=/xxx/xxx tikv_port=20160 tikv_status_po
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/TiDB配置文件/" data-id="ck32j7akc00047ituayku5zbw" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/TiDB配置文件/" data-id="ck32lyeah0005botuj2v591e1" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TiDB/">TiDB</a></li></ul>
@@ -577,7 +721,7 @@ tikv-1  ansible_host=x.x.x.x  deploy_dir=/xxx/xxx tikv_port=20160 tikv_status_po
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess特性与架构/" data-id="ck32j7ake00057itur5fc5bxn" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess特性与架构/" data-id="ck32lyeax000dbotuvpquxwxm" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
@@ -648,7 +792,7 @@ tikv-1  ansible_host=x.x.x.x  deploy_dir=/xxx/xxx tikv_port=20160 tikv_status_po
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess组件与兼容性/" data-id="ck32j7akf00087ituylm964xz" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/Vitess组件与兼容性/" data-id="ck32lyeaz000ebotu7mkz75p3" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
@@ -786,7 +930,7 @@ tikv-1  ansible_host=x.x.x.x  deploy_dir=/xxx/xxx tikv_port=20160 tikv_status_po
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/08/RDBMS中间件对比/" data-id="ck32j7ak700017itucvj252ja" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/08/RDBMS中间件对比/" data-id="ck32lyea60000botujj74533q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RDBMS-MariaDB/">RDBMS,MariaDB</a></li></ul>
@@ -1200,7 +1344,7 @@ socket=</code></pre></li>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/07/Maxscale安装部署/" data-id="ck32j7aks000i7ituxn63mnil" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/07/Maxscale安装部署/" data-id="ck32lyebc000kbotu5zavfdyv" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mariadb/">Mariadb</a></li></ul>
@@ -1928,7 +2072,7 @@ Rakesh Agrawal:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/07/Database顶会4-4/" data-id="ck32j7al6000l7itu0ux91wj9" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/07/Database顶会4-4/" data-id="ck32lyebo000nbotude9d47ke" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Meeting/">Meeting</a></li></ul>
@@ -1979,7 +2123,7 @@ Rakesh Agrawal:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://sandysandy.github.io/2019/10/07/hello-world/" data-id="ck32j7akg000a7itu5vm1nd4a" class="article-share-link">Share</a>
+      <a data-url="http://sandysandy.github.io/2019/10/07/hello-world/" data-id="ck32lyeb0000gbotundawzqtq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -2034,6 +2178,10 @@ Rakesh Agrawal:
       <ul>
         
           <li>
+            <a href="/2019/11/17/TiDB学习记录-数据迁移/">TiDB学习记录-数据迁移</a>
+          </li>
+        
+          <li>
             <a href="/2019/11/17/TiDB学习记录-监控入门/">TiDB学习记录-监控入门</a>
           </li>
         
@@ -2047,10 +2195,6 @@ Rakesh Agrawal:
         
           <li>
             <a href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/08/Vitess组件与兼容性/">Vitess组件与兼容性</a>
           </li>
         
       </ul>
