@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>TiDB学习记录-监控入门 | Try Everything</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="TiDB追番记录(中)好多好多监控   文档非常详细，监控项非常多，入门选手从overview面板开始，官方文档支持全文搜索，可以很方便找到每个监控项定义。 1.官方文档 监控说明，概述TiDB的监控架构，部署方式 监控指标，各组件监控面板划分，及监控指标 告警规则，各组件的报警规则及重要等级，包括 TiDB、TiKV、PD、TiDB Binlog、Node_exporter 和 Blackbox">
+<meta name="keywords" content="TiDB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TiDB学习记录-监控入门">
+<meta property="og:url" content="http://sandysandy.github.io/2019/11/17/TiDB学习记录-监控入门/index.html">
+<meta property="og:site_name" content="Try Everything">
+<meta property="og:description" content="TiDB追番记录(中)好多好多监控   文档非常详细，监控项非常多，入门选手从overview面板开始，官方文档支持全文搜索，可以很方便找到每个监控项定义。 1.官方文档 监控说明，概述TiDB的监控架构，部署方式 监控指标，各组件监控面板划分，及监控指标 告警规则，各组件的报警规则及重要等级，包括 TiDB、TiKV、PD、TiDB Binlog、Node_exporter 和 Blackbox">
+<meta property="og:locale" content="en,zh-cn">
+<meta property="og:updated_time" content="2019-11-17T05:00:05.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TiDB学习记录-监控入门">
+<meta name="twitter:description" content="TiDB追番记录(中)好多好多监控   文档非常详细，监控项非常多，入门选手从overview面板开始，官方文档支持全文搜索，可以很方便找到每个监控项定义。 1.官方文档 监控说明，概述TiDB的监控架构，部署方式 监控指标，各组件监控面板划分，及监控指标 告警规则，各组件的报警规则及重要等级，包括 TiDB、TiKV、PD、TiDB Binlog、Node_exporter 和 Blackbox">
+  
+    <link rel="alternate" href="/atom.xml" title="Try Everything" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Try Everything</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">just move it</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://sandysandy.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-TiDB学习记录-监控入门" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/17/TiDB学习记录-监控入门/" class="article-date">
+  <time datetime="2019-11-17T12:58:06.000Z" itemprop="datePublished">2019-11-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      TiDB学习记录-监控入门
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="TiDB追番记录-中"><a href="#TiDB追番记录-中" class="headerlink" title="TiDB追番记录(中)"></a>TiDB追番记录(中)</h2><h3 id="好多好多监控"><a href="#好多好多监控" class="headerlink" title="好多好多监控"></a>好多好多监控</h3><p>   文档非常详细，监控项非常多，入门选手从overview面板开始，官方文档支持全文搜索，可以很方便找到每个监控项定义。</p>
+<h4 id="1-官方文档"><a href="#1-官方文档" class="headerlink" title="1.官方文档"></a>1.官方文档</h4><ul>
+<li><a href="https://pingcap.com/docs-cn/stable/how-to/monitor/overview/" target="_blank" rel="noopener">监控说明</a>，概述TiDB的监控架构，部署方式</li>
+<li><a href="https://pingcap.com/docs-cn/stable/reference/key-monitoring-metrics/overview-dashboard/" target="_blank" rel="noopener">监控指标</a>，各组件监控面板划分，及监控指标</li>
+<li><a href="https://pingcap.com/docs-cn/stable/reference/alert-rules/#tidb_memory_abnormal" target="_blank" rel="noopener">告警规则</a>，各组件的报警规则及重要等级，包括 TiDB、TiKV、PD、TiDB Binlog、Node_exporter 和 Blackbox_exporter 的各报警项的规则描述及处理方法。</li>
+</ul>
+<h4 id="2-主要监控项"><a href="#2-主要监控项" class="headerlink" title="2.主要监控项"></a>2.主要监控项</h4><ul>
+<li><p>Overview 面板，集群概况，各组件主要信息状态，可以大致缩小排查集群瓶颈的范围，再结合组件详细面板，慢日志，实例错误日志和业务日志定位问题</p>
+<ul>
+<li><p>Services Port Status，各组件状态，异常么有显示具体组件地址，结合告警信息查看</p>
+<ul>
+<li>count(probe_success{group=”{各组件名}”} == 1) ，是否存在异常状态节点</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>- PD，集群容量，region 基本健康状态信息
+
+    - region health，在迁移或者扩容的过程中，可以监控到store及region的平衡状态
+
+
+    - 是否存在读/写热点，也可以根据慢日志里统计是否都来自同一个kv实例
+
+
+    - region heartbeat，每个tikv上报pd的心跳，如果心跳上报过多，超过10w，考虑扩容kv，或者尝试静默region，结合99% region health latency 判断
+
+
+- TiDB，db组件状态，直接反映集群对外提供服务的健康程度，QPS，Duration现象直观
+
+    - 集群当前的QPS 以及 每个db实例的连接数
+
+
+    - 执行耗时三个纬度，结合kv cmd duration 判断耗时主要在哪个组件
+
+
+    - db节点内存使用量，结合告警阀值配置及时扩容
+
+
+    - kv命令执行数量和kv命令执行时间，结合上面的QPS和duration，缩小定位范围
+
+
+    - kv返回的错误信息，事务冲突数量
+
+
+- TiKV，kv组件状态，存储层资源状态，容量使用情况等
+    - scheduler pending commands 写入是否有堆积
+
+    - coprocessor, TiKV 中查询消耗的时间及各类查询耗时
+
+    - Coprocessor CPU：TiKV 查询线程的 CPU 使用率，和业务相关，复杂查询会使用大量的 CPU 资源
+    - raftstore 线程的 CPU 使用率，线程数量默认为 2 (通过 conf/tikv.toml raftstore.store-pool-size 配置)。如果单个线程使用率超过 80%，说明使用率很高
+
+
+- System Info，服务器层概况，CPU，内存，IO，网络四大名捕</code></pre><ul>
+<li><p>PD面板，PD配置，集群调度情况</p>
+<ul>
+<li><p>Cluster 集群容量，基本配置信息，当前tso，集群ID等</p>
+<ul>
+<li>PD scheduler config：PD 调度配置列表</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>TiDB面板，Query信息，慢查询的统计信息，也可以看日志来分析</p>
+</li>
+<li><p>TiKV面板，Store信息，region分布，raft监控项</p>
+<ul>
+<li>scheduler pending commands,是否存在写入堆积</li>
+</ul>
+</li>
+<li><p>tikv-summary 面板，kv信息汇</p>
+</li>
+<li><p>tikv-details面板，各项详情</p>
+<ul>
+<li><p>thread cpu </p>
+<ul>
+<li>raft store cpu (这个图overview有，在tikv目录)，3.0版本默认最多使用2个线程，所以上限制是200%，如果系统已经达到这个限制，说明raft写入存在瓶颈，需要进一步排查</li>
+</ul>
+</li>
+<li><p>gRPCa</p>
+<ul>
+<li>gRPC message count，每种 gRPC 消息的个数</li>
+</ul>
+</li>
+<li><p>coprocess，</p>
+<ul>
+<li>coprocess cpu &amp; scan keys (这个图overview有，在tikv目录)，展示当前集群读请求的状态是否存在热点</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>tikv-trouble-shooting面板，按照异常分类，可以定位到具体某个kv实例异常</p>
+</li>
+<li><p>还有其他比如binlog,drainer,syncer,lighting,DM 等监控详情，具体问题具体分析，可能出现在下期。</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://sandysandy.github.io/2019/11/17/TiDB学习记录-监控入门/" data-id="ck32j7ak100007ituv68vy6tr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TiDB/">TiDB</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/11/02/TiDB学习记录/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">TiDB学习记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mariadb/">Mariadb</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Meeting/">Meeting</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/RDBMS-MariaDB/">RDBMS,MariaDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TiDB/">TiDB</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vitess/">Vitess</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Mariadb/" style="font-size: 10px;">Mariadb</a> <a href="/tags/Meeting/" style="font-size: 10px;">Meeting</a> <a href="/tags/RDBMS-MariaDB/" style="font-size: 10px;">RDBMS,MariaDB</a> <a href="/tags/TiDB/" style="font-size: 20px;">TiDB</a> <a href="/tags/Vitess/" style="font-size: 15px;">Vitess</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/11/17/TiDB学习记录-监控入门/">TiDB学习记录-监控入门</a>
+          </li>
+        
+          <li>
+            <a href="/2019/11/02/TiDB学习记录/">TiDB学习记录</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/TiDB配置文件/">TiDB配置文件</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/Vitess特性与架构/">Vitess特性与架构</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/08/Vitess组件与兼容性/">Vitess组件与兼容性</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 ZhangWen<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
